@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
-
+import Schema from './Schema'
+import * as yup from 'yup'
 const MLabel = styled.label`
 font-size:2rem;
 display:flex;
@@ -31,30 +32,45 @@ export default function Form(){
         instructions: '',
         amt: '',
     }
+    const [errors, setErrors] = useState({
+        name: "",
+        size: "",
+        sauce: "",
+    })
     const [formValues, setFormValues] = useState(initialFormValues)
 
     const change = e => {
         const {checked, name, type, value} = e.target
         const valueToUse = type === 'checkbox' ? checked : value
         setFormValues({...formValues, [name]: valueToUse})
+        hadleSetErrors(name, valueToUse)
     }
 
     const submit = e => {
         e.preventDefault()
     }
+
+    const hadleSetErrors = (name, value) => {
+        yup.reach(Schema, name).validate(value)
+            .then(() => setErrors({...errors, [name]: ''}))
+            .catch(err => {setErrors({...errors, [name]: err.errors[0]})})
+    }
     console.log(formValues)
+    console.log(errors)
     return(
         <Mdiv> 
             <p>Build Your Pizza</p>
             <form onSubmit={submit}>
                 <MLabel>
-                    <p>Name</p>
+                    <p>Name<br/>Required</p>
+                    {errors.name.length === 0 ? null : <pre>{errors.name}</pre>}
                     <input type='text' value={formValues.name} onChange={change} name='name'/>
                 </MLabel>
 
 
                 <MLabel>
                   <p>Choice of size<br/>Required</p>
+                  {errors.size.length === 0 ? null : <pre>{errors.size}</pre>}
                    <Select name='size' value={formValues.size} onChange={change}>
                        <option value=''>---Select Size---</option>
                        <option value='small'>Small</option>
@@ -65,6 +81,7 @@ export default function Form(){
 
                 <MLabel>
                     <p>Choice of sauce<br/>Required</p>
+                    {errors.sauce.length === 0 ? null : <pre>{errors.sauce}</pre>}
                     <label htmlFor='red'>Red Sauce
                         <input type='radio' name='sauce' value='red' id='red' onChange={change}/>
                     </label>
