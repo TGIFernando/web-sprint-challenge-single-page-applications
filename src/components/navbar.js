@@ -23,8 +23,8 @@ export default function Navbar () {
         <Link to = '/' className='link'>
             <Buttn>Home</Buttn>
         </Link>
-        <Link to='/forms' className='link'>
-            <Buttn>Form</Buttn>
+        <Link to='/pizza' className='link'>
+            <Buttn>pizza</Buttn>
         </Link>
     </MainDiv>
     </div>
