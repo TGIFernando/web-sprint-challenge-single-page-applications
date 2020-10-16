@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import Schema from './Schema'
 import * as yup from 'yup'
+import {Link, Route} from 'react-router-dom'
+import Order from './Order'
 const MLabel = styled.label`
 font-size:2rem;
 display:flex;
@@ -20,6 +22,7 @@ const Mdiv = styled.div`
 background-color: #2C7773;
 `
 export default function Form(){
+    const initalTValue = true
     const initialFormValues = {
         name:'',
         size: '',
@@ -38,6 +41,7 @@ export default function Form(){
         sauce: "",
     })
     const [formValues, setFormValues] = useState(initialFormValues)
+    const [disabled, setDisabled] = useState(initalTValue)
 
     const change = e => {
         const {checked, name, type, value} = e.target
@@ -55,6 +59,15 @@ export default function Form(){
             .then(() => setErrors({...errors, [name]: ''}))
             .catch(err => {setErrors({...errors, [name]: err.errors[0]})})
     }
+
+    useEffect(() => {
+        Schema.isValid(formValues)
+            .then(valid => {
+                setDisabled(!valid)
+            }).catch(err => {
+                console.log(err)
+            })
+    }, [formValues])
     console.log(formValues)
     console.log(errors)
     return(
@@ -123,11 +136,25 @@ export default function Form(){
                     <p>Special instructions</p>
                     <input type='text' value={formValues.instructions} onChange={change} name='instructions'/>
                 </MLabel>
-
+                <MLabel><input type='submit' disabled={disabled} value='Place Order'/></MLabel>
                 <MLabel>
-                    <input type='submit' value='Place Order'/>
+                    <p>ORDER: </p>
+                    <h2>NAME: {formValues.name}</h2>
+                    <h2>SIZE: {formValues.size}</h2>
+                    <h2>INSTRUCTIONS: {formValues.instructions}</h2>
                 </MLabel>
+{/* 
+                <div>
+                    <Link to='/order'>
+                        <input type='submit' disabled={disabled} value='Place Order'/>
+                    </Link>
+
+                    <Route path = '/order'>
+                        <Order name = {formValues.name}/>
+                    </Route>
+                </div> */}
             </form>
+
         </Mdiv>
     )
 }
