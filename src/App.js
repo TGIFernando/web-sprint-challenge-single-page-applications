@@ -1,11 +1,14 @@
 import React from "react";
+import {Route} from 'react-router-dom'
+import Navbar from './components/navbar'
+import Home from './components/home'
 
 const App = () => {
   return (
-    <>
-      <h1>Lambda Eats</h1>
-      <p>You can remove this code and create your own header</p>
-    </>
+    <div>
+      <Navbar/>
+      <Home/>
+    </div>
   );
 };
 export default App;
