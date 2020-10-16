@@ -3,9 +3,7 @@ import styled from 'styled-components'
 import {Link} from 'react-router-dom'
 
 const MainDiv = styled.div`
-margin: 0 auto;
 display:flex;
-padding: 5px;
 background-color:#42BFDD;
 justify-content: space-around;
 `

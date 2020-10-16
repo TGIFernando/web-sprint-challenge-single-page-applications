@@ -2,18 +2,19 @@ import React, {useState, useEffect} from 'react'
 import styled from 'styled-components'
 import Schema from './Schema'
 import * as yup from 'yup'
-import {Link, Route} from 'react-router-dom'
 import Order from './Order'
 import axios from 'axios'
+import { v4 as uuid } from "uuid";
 const MLabel = styled.label`
 font-size:2rem;
 display:flex;
 padding: 2px;
 align-items:center;
-border:2px solid red;
+border:2px solid #1C829C;
 justify-content: center;
 flex-direction: column;
 text-align: center;
+margin: 1px 1px;
 `
 const Select = styled.select`
 height: 2rem;
@@ -21,9 +22,11 @@ border-radius: 10px;
 `
 const Mdiv = styled.div`
 background-color: #2C7773;
+padding: 5px;
 `
 export default function Form(){
     const initalTValue = true
+    const toppings = []
     const initialFormValues = {
         name:'',
         size: '',
@@ -54,7 +57,7 @@ export default function Form(){
 
     const submit = e => {
         e.preventDefault()
-        const newOrder = {
+        const newOrder = [{
             name: formValues.name.trim(),
             size: formValues.size.trim(),
             sauce: formValues.sauce.trim(),
@@ -65,10 +68,12 @@ export default function Form(){
             gf: formValues.gf,
             instructions: formValues.instructions.trim(),
             amt: formValues.amt.trim(),
-            }
-        axios.post("https://reqres.in/api/orders", newOrder)
+            toppings: toppings,
+            id: uuid()
+            }]
+        axios.post("https://reqres.in/api/order", newOrder)
         .then(res => {
-            setOrder([formValues, res.data])
+            setOrder(res.data)
             setFormValues(initialFormValues)
         }).catch(err => {
             console.log('ERROR: ', (err))
@@ -89,7 +94,21 @@ export default function Form(){
                 console.log(err)
             })
     }, [formValues])
-    console.log(order)
+
+    if (formValues.pepperoni === true){
+        toppings.push('Pepperoni ')
+    }
+    if (formValues.olives === true){
+        toppings.push('Olives ')
+    }
+    if (formValues.cheese === true){
+        toppings.push('Extra Cheese ')
+    }
+    if (formValues.sausage === true){
+        toppings.push('Sausage ')
+    }
+    console.log(toppings)
+ 
     return(
         <Mdiv> 
             <p>Build Your Pizza</p>
@@ -157,24 +176,10 @@ export default function Form(){
                     <input type='text' value={formValues.instructions} onChange={change} name='instructions'/>
                 </MLabel>
                 <MLabel><input type='submit' disabled={disabled} value='Place Order'/></MLabel> 
-                {/* <div>
-                    <Link to='/order'>
-                        <input type='submit' disabled={disabled} value='Place Order'/>
-                        <Order data = {formValues.name}/>
-                    </Link>
-
-                    <Route path = '/order'>
-                        <Order data = {formValues.name}/>
-                    </Route>
-                </div> */}
-
                 <MLabel>
-                    {order.map(data => <Order data={data} key={data.id} />)}
+                    {order.map(data => <Order  key={data.id} data={data}/>)}
                 </MLabel>
-
-               
             </form>
-
         </Mdiv>
     )
 }
