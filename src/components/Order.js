@@ -12,11 +12,18 @@ flex-direction: column;
 text-align: center;
 `
 export default function Order(props){
-    const {name} = props
+    const {data} = props
     return(
+        <div>
         <MLabel>
-            <p>NAME: </p>
-            {name}
+            <p>NAME: {data.name}</p>
         </MLabel>
+        <MLabel>
+            <p>SIZE: {data.size}</p>
+        </MLabel>
+        <MLabel>
+            <p>INSTRUCTIONS: {data.instructions}</p>
+        </MLabel>
+        </div>
     )
 }

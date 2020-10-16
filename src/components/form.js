@@ -4,6 +4,7 @@ import Schema from './Schema'
 import * as yup from 'yup'
 import {Link, Route} from 'react-router-dom'
 import Order from './Order'
+import axios from 'axios'
 const MLabel = styled.label`
 font-size:2rem;
 display:flex;
@@ -42,6 +43,7 @@ export default function Form(){
     })
     const [formValues, setFormValues] = useState(initialFormValues)
     const [disabled, setDisabled] = useState(initalTValue)
+    const [order, setOrder] = useState([])
 
     const change = e => {
         const {checked, name, type, value} = e.target
@@ -52,6 +54,25 @@ export default function Form(){
 
     const submit = e => {
         e.preventDefault()
+        const newOrder = {
+            name: formValues.name.trim(),
+            size: formValues.size.trim(),
+            sauce: formValues.sauce.trim(),
+            pepperoni: formValues.pepperoni,
+            olives: formValues.olives,
+            cheese: formValues.cheese,
+            sausage: formValues.sausage,
+            gf: formValues.gf,
+            instructions: formValues.instructions.trim(),
+            amt: formValues.amt.trim(),
+            }
+        axios.post("https://reqres.in/api/orders", newOrder)
+        .then(res => {
+            setOrder([formValues, res.data])
+            setFormValues(initialFormValues)
+        }).catch(err => {
+            console.log('ERROR: ', (err))
+        })
     }
 
     const hadleSetErrors = (name, value) => {
@@ -68,8 +89,7 @@ export default function Form(){
                 console.log(err)
             })
     }, [formValues])
-    console.log(formValues)
-    console.log(errors)
+    console.log(order)
     return(
         <Mdiv> 
             <p>Build Your Pizza</p>
@@ -136,23 +156,23 @@ export default function Form(){
                     <p>Special instructions</p>
                     <input type='text' value={formValues.instructions} onChange={change} name='instructions'/>
                 </MLabel>
-                <MLabel><input type='submit' disabled={disabled} value='Place Order'/></MLabel>
-                <MLabel>
-                    <p>ORDER: </p>
-                    <h2>NAME: {formValues.name}</h2>
-                    <h2>SIZE: {formValues.size}</h2>
-                    <h2>INSTRUCTIONS: {formValues.instructions}</h2>
-                </MLabel>
-{/* 
-                <div>
+                <MLabel><input type='submit' disabled={disabled} value='Place Order'/></MLabel> 
+                {/* <div>
                     <Link to='/order'>
                         <input type='submit' disabled={disabled} value='Place Order'/>
+                        <Order data = {formValues.name}/>
                     </Link>
 
                     <Route path = '/order'>
-                        <Order name = {formValues.name}/>
+                        <Order data = {formValues.name}/>
                     </Route>
                 </div> */}
+
+                <MLabel>
+                    {order.map(data => <Order data={data} key={data.id} />)}
+                </MLabel>
+
+               
             </form>
 
         </Mdiv>

@@ -7,7 +7,7 @@ display:flex;
 border:2px solid red;
 justify-content:center;
 align-items: center;
-background-image: url('https://i.imgur.com/XBEKUJK.jpg');
+background: url('https://i.imgur.com/XBEKUJK.jpg');
 height: 30rem;
 `
 
