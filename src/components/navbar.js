@@ -23,7 +23,7 @@ export default function Navbar () {
         <Link to = '/' className='link'>
             <Buttn>Home</Buttn>
         </Link>
-        <Link to='/pizza' className='link'>
+        <Link to='/pizza' className='link' id='pizza'>
             <Buttn>pizza</Buttn>
         </Link>
     </MainDiv>

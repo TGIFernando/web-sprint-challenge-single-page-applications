@@ -24,7 +24,7 @@ export default function Home(){
     return(
         <FlexyDiv>
             <Link to='/pizza' className='link'>
-                <PizzaButn>GET PIZZA</PizzaButn>
+                <PizzaButn id='pizzza' >GET PIZZA</PizzaButn>
             </Link>
         </FlexyDiv>
     )
